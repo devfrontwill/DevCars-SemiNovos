@@ -12,13 +12,14 @@ interface InputProps{
 export function Input({ name, placeholder, type, register, rules, error }: InputProps) {
     return(
         <div>
-            <input 
+            <input
+                className="w-full border-2 rounded-md h-11 px-2"
                 placeholder={placeholder}
                 type={type}
                 {...register(name, rules)}
                 id={name}                
             />
-            {error && <p>{error}</p>}
+            {error && <p className="my-1 text-red-600">{error}</p>}
         </div>
     )
 }
