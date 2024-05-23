@@ -1,17 +1,29 @@
+import { ChangeEvent, useState, useContext } from "react";
 import { Container } from "../../../components/container";
 import { DashboardHeader } from "../../../components/painelHeader";
-import { Input } from "../../../components/input";
-import { FiUpload } from 'react-icons/fi';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { zodResolver } from "@hookform/resolvers/zod";
+
+import { FiUpload } from 'react-icons/fi'
+import { useForm } from 'react-hook-form'
+import { Input } from '../../../components/input'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { AuthContext } from '../../../contexts/AuthContext'
+import { v4 as uuidV4 } from 'uuid'
+
+import { storage } from '../../../services/firebaseConnection'
+import {
+    ref,
+    uploadBytes,
+    getDownloadURL,
+    deleteObject
+} from 'firebase/storage'
 
 
 const schema = z.object({
     name: z.string().min(3, "O preenchimento deste campo é obrigatório ! "),
     model: z.string().min(3, "O preenchimento deste campo é obrigatório ! "),
     year: z.string().min(4, "O preenchimento deste campo é obrigatório ! ")
-    .refine((value) => /^(?=.*[/]).{4,9}$/.test(value), "Ex: 2024/24 ou 2024/2024"),
+        .refine((value) => /^(?=.*[/]).{4,9}$/.test(value), "Ex: 2024/24 ou 2024/2024"),
     km: z.string().min(3, "O preenchimento deste campo é obrigatório ! "),
     price: z.string().min(3, "O preenchimento deste campo é obrigatório ! "),
     city: z.string().min(3, "O preenchimento deste campo é obrigatório ! "),
@@ -19,17 +31,52 @@ const schema = z.object({
         .refine((value) => /^(\d{11,12})$/.test(value), {
             message: "O número de telefone digitado é inválido."
         }),
-    description: z.string().min(0,"O preenchimento deste campo é obrigatório ! "),
+    description: z.string().min(0, "O preenchimento deste campo é obrigatório ! "),
 })
 
 type FormData = z.infer<typeof schema>;
 
 
 export default function New() {
+    const { user } = useContext(AuthContext);
     const { register, handleSubmit, formState: { errors }, reset } = useForm<FormData>({
         resolver: zodResolver(schema),
         mode: "onChange"
     })
+
+    async function handleFile(e: ChangeEvent<HTMLInputElement>) {
+        if (e.target.files && e.target.files[0]) {
+            const image = e.target.files[0]
+
+            if (image.type === 'image/jpeg' || image.type === 'image/png') {
+                await handleUpload(image)
+            } else {
+                alert("Envie uma imagem no formato JPEG ou PNG !")
+                return;
+            }
+        }
+    }
+
+
+    async function handleUpload(image: File) {
+        if (!user?.uid) {
+            return;
+
+        }
+        const currentUid = user?.uid;
+        const uidImage = uuidV4();
+
+        const uploadRef = ref(storage, `images/${currentUid}/${uidImage}`)
+
+        uploadBytes(uploadRef, image)
+            .then((snapshot) => {
+                getDownloadURL(snapshot.ref)
+                    .then((downloadUrl) => {
+                        console.log("URL DE ACESSO DA FOTO ", downloadUrl);
+                    })
+            })
+
+    }
 
     function onSubmit(data: FormData) {
         console.log(data);
@@ -47,7 +94,11 @@ export default function New() {
                     </div>
 
                     <div className="cursor-pointer">
-                        <input className="opacity-0 cursor-pointer" type="file" accept="image/*" />
+                        <input
+                            className="opacity-0 cursor-pointer"
+                            type="file"
+                            accept="image/*"
+                            onChange={handleFile} />
                     </div>
                 </button>
             </div>
