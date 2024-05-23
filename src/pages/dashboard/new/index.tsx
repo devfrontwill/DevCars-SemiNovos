@@ -11,9 +11,7 @@ const schema = z.object({
     name: z.string().min(3, "O preenchimento deste campo é obrigatório ! "),
     model: z.string().min(3, "O preenchimento deste campo é obrigatório ! "),
     year: z.string().min(4, "O preenchimento deste campo é obrigatório ! ")
-        .refine((value) => /^(\d{4})$/.test(value), {
-            message: "O ano do veículo digitado é inválido! "
-        }),
+    .refine((value) => /^(?=.*[/]).{4,9}$/.test(value), "Ex: 2024/24 ou 2024/2024"),
     km: z.string().min(3, "O preenchimento deste campo é obrigatório ! "),
     price: z.string().min(3, "O preenchimento deste campo é obrigatório ! "),
     city: z.string().min(3, "O preenchimento deste campo é obrigatório ! "),
@@ -21,7 +19,7 @@ const schema = z.object({
         .refine((value) => /^(\d{11,12})$/.test(value), {
             message: "O número de telefone digitado é inválido."
         }),
-    description: z.string().min(1,"O preenchimento deste campo é obrigatório ! "),
+    description: z.string().min(0,"O preenchimento deste campo é obrigatório ! "),
 })
 
 type FormData = z.infer<typeof schema>;
