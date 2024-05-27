@@ -2,7 +2,7 @@ import { ChangeEvent, useState, useContext } from "react";
 import { Container } from "../../../components/container";
 import { DashboardHeader } from "../../../components/painelHeader";
 
-import { FiUpload } from 'react-icons/fi'
+import { FiUpload, FiTrash } from 'react-icons/fi'
 import { useForm } from 'react-hook-form'
 import { Input } from '../../../components/input'
 import { z } from 'zod'
@@ -23,7 +23,7 @@ const schema = z.object({
     name: z.string().min(3, "O preenchimento deste campo é obrigatório ! "),
     model: z.string().min(3, "O preenchimento deste campo é obrigatório ! "),
     year: z.string().min(4, "O preenchimento deste campo é obrigatório ! ")
-        .refine((value) => /^(?=.*[/]).{4,9}$/.test(value), "Ex: 2024/24 ou 2024/2024"),
+        .refine((value) => /^(?=.*[/]).{4,9}$/.test(value), "Preencha este campo de acordo com o formato solicitado, Ex: 2024/24 ou 2024/2024"),
     km: z.string().min(3, "O preenchimento deste campo é obrigatório ! "),
     price: z.string().min(3, "O preenchimento deste campo é obrigatório ! "),
     city: z.string().min(3, "O preenchimento deste campo é obrigatório ! "),
@@ -36,6 +36,14 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
+interface ImageItemProps {
+    uid: string;
+    name: string;
+    previewUrl: string;
+    url: string;
+    map: string;
+}
+
 
 export default function New() {
     const { user } = useContext(AuthContext);
@@ -44,6 +52,9 @@ export default function New() {
         mode: "onChange"
     })
 
+    const [carImages, setCarImages] = useState<ImageItemProps>([]);
+
+    //função que faz o upload no projeto;
     async function handleFile(e: ChangeEvent<HTMLInputElement>) {
         if (e.target.files && e.target.files[0]) {
             const image = e.target.files[0]
@@ -57,7 +68,7 @@ export default function New() {
         }
     }
 
-
+    //função para fazer upload de img no Storage do firebase e gerar a Url da img;
     async function handleUpload(image: File) {
         if (!user?.uid) {
             return;
@@ -70,16 +81,35 @@ export default function New() {
 
         uploadBytes(uploadRef, image)
             .then((snapshot) => {
-                getDownloadURL(snapshot.ref)
-                    .then((downloadUrl) => {
-                        console.log("URL DE ACESSO DA FOTO ", downloadUrl);
-                    })
+                getDownloadURL(snapshot.ref).then((downloadUrl) => {
+                    const imageItem = {
+                        name: uidImage,
+                        uid: currentUid,
+                        previewUrl: URL.createObjectURL(image),
+                        url: downloadUrl,
+                    }
+                    setCarImages((images) => [...images, imageItem])
+                })
             })
 
     }
 
     function onSubmit(data: FormData) {
         console.log(data);
+    }
+
+    async function handleDeleteImage(item: ImageItemProps) {
+        const imagePath = `images/${item.uid}/${item.name}`;
+        const imageRef = ref(storage, imagePath);
+
+        try {
+            await deleteObject(imageRef)
+            setCarImages(carImages.filter((car) => car.url !== item.url))
+        }
+        catch (err) {
+            console.log("ERRO AO DELETAR IMAGEM");
+            console.log(err);
+        }
     }
 
 
@@ -101,6 +131,19 @@ export default function New() {
                             onChange={handleFile} />
                     </div>
                 </button>
+
+                {carImages.map(item => (
+                    <div key={item.name} className="w-full h-32 flex items-center justify-center relative">
+                        <button className="absolute" onClick={() => handleDeleteImage(item)} >
+                            <FiTrash size={28} color="#fff" />
+                        </button>
+                        <img
+                            src={item.previewUrl}
+                            className="rounded-lg w-full h-32 object-cover"
+                            alt="Foto do carro"
+                        />
+                    </div>
+                ))}
             </div>
 
             <div className="w-full bg-white p-3 rounded-lg flex flex-col sm:flex-row items-center gap-2 mt-2">
@@ -138,7 +181,7 @@ export default function New() {
                                 register={register}
                                 name="year"
                                 error={errors.year?.message}
-                                placeholder="Ex: 2023"
+                                placeholder="Ex: 2024/24 ou 2024/2024"
                             />
                         </div>
 
