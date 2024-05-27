@@ -68,7 +68,7 @@ export default function New() {
         }
     }
 
-    //função para fazer upload de img no Storage do firebase e gerar a Url da img;
+    //função para fazer upload de img no Storage do firebase, gerar a Url da img e adicionar img na tela;
     async function handleUpload(image: File) {
         if (!user?.uid) {
             return;
