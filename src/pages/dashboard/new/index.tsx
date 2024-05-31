@@ -2,22 +2,23 @@ import { ChangeEvent, useState, useContext } from "react";
 import { Container } from "../../../components/container";
 import { DashboardHeader } from "../../../components/painelHeader";
 
-import { FiUpload, FiTrash } from 'react-icons/fi'
-import { useForm } from 'react-hook-form'
+import { FiUpload, FiTrash } from 'react-icons/fi';
+import { useForm } from 'react-hook-form';
 import { Input } from '../../../components/input'
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { AuthContext } from '../../../contexts/AuthContext'
-import { v4 as uuidV4 } from 'uuid'
+import { z, any } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { AuthContext } from '../../../contexts/AuthContext';
+import { v4 as uuidV4 } from 'uuid';
 
-import { storage } from '../../../services/firebaseConnection'
+import { storage, db } from '../../../services/firebaseConnection';
 import {
     ref,
     uploadBytes,
     getDownloadURL,
     deleteObject
-} from 'firebase/storage'
+} from 'firebase/storage';
 
+import { addDoc, collection } from 'firebase/firestore';
 
 const schema = z.object({
     name: z.string().min(3, "O preenchimento deste campo é obrigatório ! "),
@@ -31,17 +32,20 @@ const schema = z.object({
         .refine((value) => /^(\d{11,12})$/.test(value), {
             message: "O número de telefone digitado é inválido."
         }),
-    description: z.string().min(0, "O preenchimento deste campo é obrigatório ! "),
+    description: z.string().min(10, "O preenchimento deste campo é obrigatório ! "),
 })
 
 type FormData = z.infer<typeof schema>;
 
 interface ImageItemProps {
+    filter(arg0: (car: any) => boolean): import("react").SetStateAction<ImageItemProps>;
+    map(arg0: (item: any) => import("react/jsx-runtime").JSX.Element): import("react").ReactNode;
+    length: number;
     uid: string;
     name: string;
     previewUrl: string;
     url: string;
-    map: string;
+    
 }
 
 
@@ -88,14 +92,51 @@ export default function New() {
                         previewUrl: URL.createObjectURL(image),
                         url: downloadUrl,
                     }
-                    setCarImages((images) => [...images, imageItem])
+                    setCarImages((images):any => [...images, imageItem])
                 })
             })
 
     }
 
     function onSubmit(data: FormData) {
-        console.log(data);
+
+        if(carImages.length === 0 ){
+            alert("Envie alguma imagem deste veiculo !");
+            return
+        }
+
+        const carListImages = carImages.map( car => {
+            return{
+                uid: car.uid,
+                name: car.name,
+                url: car.url
+            }
+        })
+
+        addDoc(collection(db, "cars"), {
+            name: data.name,
+            model: data.model,
+            whatsapp: data.whatsapp,
+            city: data.city,
+            year: data.year,
+            km: data.km,
+            price: data.price,
+            description: data.description,
+            createAt: new Date(),
+            owner: user?.name,
+            uid: user?.uid,
+            images: carListImages,
+        })
+        .then(() => {
+            reset();
+            setCarImages([]);
+            alert("Item Cadastrado Com Sucesso ! ");
+        })
+        .catch((err)=>{
+            alert("Erro ao Cadastrar: ");
+            alert(err);
+        })
+        
     }
 
     async function handleDeleteImage(item: ImageItemProps) {
