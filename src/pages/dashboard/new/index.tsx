@@ -56,7 +56,7 @@ export default function New() {
         mode: "onChange"
     })
 
-    const [carImages, setCarImages] = useState<ImageItemProps>([]);
+    const [carImages, setCarImages] = useState<ImageItemProps[]>([]);
 
     //função que faz o upload no projeto;
     async function handleFile(e: ChangeEvent<HTMLInputElement>) {
@@ -122,7 +122,7 @@ export default function New() {
             km: data.km,
             price: data.price,
             description: data.description,
-            createAt: new Date(),
+            createdAt: new Date(),
             owner: user?.name,
             uid: user?.uid,
             images: carListImages,
