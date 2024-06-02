@@ -5,7 +5,7 @@ import { DashboardHeader } from "../../../components/painelHeader";
 import { FiUpload, FiTrash } from 'react-icons/fi';
 import { useForm } from 'react-hook-form';
 import { Input } from '../../../components/input'
-import { z, any } from 'zod';
+import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AuthContext } from '../../../contexts/AuthContext';
 import { v4 as uuidV4 } from 'uuid';
@@ -190,7 +190,7 @@ export default function New() {
             <div className="w-full bg-white p-3 rounded-lg flex flex-col sm:flex-row items-center gap-2 mt-2">
                 <form
                     className="w-full"
-                    onClick={handleSubmit(onSubmit)}
+                    onSubmit={handleSubmit(onSubmit)}
                 >
                     <div className="mb-3">
                         <p className="mb-2 font-medium">Nome do veículo: </p>
