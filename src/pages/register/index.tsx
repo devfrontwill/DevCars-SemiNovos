@@ -9,6 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { auth } from '../../services/firebaseConnection';
 import { createUserWithEmailAndPassword, updateProfile, signOut } from 'firebase/auth';
 import { AuthContext } from '../../contexts/AuthContext';
+import toast from 'react-hot-toast';
 
 const schema = z.object({
     name: z.string().min(6, "O preenchimento deste campo é obrigatório! "),
@@ -47,7 +48,7 @@ export default function Register() {
                 email: data.email,
                 uid: user.user.uid
             })
-            alert("Cadastrado com sucesso ! ")            
+            toast.success("Cadastrado com sucesso. | Bem vindo ao DevMotors")          
             navigate("/dashboard", { replace: true })
         })
         .catch((err) => {

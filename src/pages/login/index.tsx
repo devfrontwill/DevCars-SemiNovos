@@ -8,7 +8,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { auth } from '../../services/firebaseConnection';
 import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
-
+import toast from 'react-hot-toast';
 
 const schema = z.object({
     email: z.string().email("Insira um email válido !").min(6, "O preenchimento deste campo é obrigatório! "),
@@ -38,12 +38,13 @@ export default function Login() {
         signInWithEmailAndPassword(auth, data.email, data.password)
         .then((user) => {
             console.log(user);
-            alert("Logado com Sucesso !");
+            toast.success("Logado com sucesso ! ")
             navigate("/dashboard", { replace: true })
         })
         .catch((err) => {
             console.log("Erro ao tentar logar: ");
             console.log(err.code);
+            toast.error("Erro ao fazer login ! ")
         })
     }
 
