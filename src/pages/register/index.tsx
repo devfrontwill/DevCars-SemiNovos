@@ -1,6 +1,6 @@
 import { useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import logo from '../../assets/logo.svg';
+import logo from '../../assets/logo_signup.png';
 import { Container } from '../../components/container';
 import { Input } from '../../components/input';
 import { useForm } from 'react-hook-form';
@@ -62,7 +62,7 @@ export default function Register() {
             <div className="w-full min-h-screen flex justify-center items-center flex-col gap-4">
                 <Link to="/" className="mb-6 max-w-sm w-full">
                     <img
-                        className="w-full"
+                        className="w-11/12"
                         src={logo}
                         alt="Logo do site"
                     />
