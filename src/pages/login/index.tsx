@@ -53,7 +53,7 @@ export default function Login() {
             <div className="w-full min-h-screen flex justify-center items-center flex-col gap-4">
                 <Link to="/" className="mb-6 max-w-sm w-full">
                     <img
-                        className="w-11/12"
+                        className="w-11/12 rounded-md"
                         src={logo}
                         alt="Logo do site"
                     />

@@ -7,7 +7,7 @@ import { getDoc, doc } from "firebase/firestore";
 import { db } from "../../services/firebaseConnection";
 
 import { Swiper, SwiperSlide } from 'swiper/react';
-
+import { Autoplay, Pagination, Navigation } from 'swiper/modules';
 
 interface CarProps {
     id: string;
@@ -98,10 +98,15 @@ export default function CarDetail() {
         <Container>
 
             {car && (
-                <Swiper
+                <Swiper                    
                     slidesPerView={sliderPerView}
                     pagination={{ clickable: true }}
+                    autoplay={{
+                        delay: 2500,
+                        disableOnInteraction: true,
+                    }}
                     navigation
+                    modules={[Autoplay, Pagination, Navigation]}              
                 >
                     {car?.images.map(image => (
                         <SwiperSlide key={image.name}>
@@ -152,7 +157,7 @@ export default function CarDetail() {
                     <p> {car?.whatsapp} </p>
 
                     <a
-                        href={`https://api.whatsapp.com/send?phone=${car?.whatsapp}&text=Olá visualizei o anúncio: ** ${car?.name} ** no Joga Pra Rolo App e fiquei interessado, ainda está disponível ?`}
+                        href={`https://api.whatsapp.com/send?phone=${car?.whatsapp}&text=Olá visualizei o anúncio: ** ${car?.name} ** no DevCars Semi Novos e fiquei interessado, ainda está disponível ?`}
                         target="_blank"
                         className="cursor-pointer bg-green-500 w-full text-white flex items-center justify-center gap-2 my-6 h-11 text-xl rounded-lg font-medium"
                     >

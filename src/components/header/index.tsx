@@ -12,7 +12,7 @@ export default function Header() {
             <header className="flex w-full max-w-7xl items-center justify-between px-4 mx-auto">
                 <Link to="/" >
                     <img
-                        className="w-56"
+                        className="w-56 rounded-md"
                         src={logo}
                         alt="Logo do site"
                     />

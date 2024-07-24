@@ -62,7 +62,7 @@ export default function Register() {
             <div className="w-full min-h-screen flex justify-center items-center flex-col gap-4">
                 <Link to="/" className="mb-6 max-w-sm w-full">
                     <img
-                        className="w-11/12"
+                        className="w-11/12 rounded-md mt-3"
                         src={logo}
                         alt="Logo do site"
                     />
@@ -106,7 +106,7 @@ export default function Register() {
                 </form>
 
                 <Link to="/login">
-                    Já possui uma conta? Faça o login !
+                    <p className="-mt-4 mb-6">Já possui uma conta? Faça o login ! </p>
                 </Link>
 
             </div>
