@@ -16,8 +16,8 @@
 🚀 DevCars Semi Novos, é um sistema Web responsivo feito para uma plataforma de venda de veiculos semi novos, no qual o usuario pode colocar seu veiculo a venda após o cadastro, porem tambem permite para quem não for usuario cadastrado ter acesso a plataforma e visualizar os veiculos disponiveis e caso tenha interesse entrar em contato com o vendedor através de um CTA que o direciona para o WhatsApp.<br> Possui também uma area de Dashboard onde é possivel ver seus veiculos ativos à venda, onde o usuario pode gerencia-los.<br>
 Possui um campo de busca para que o usuario possa buscar diretamente o item que esteja procurando, evitando rolar toda a página e assim realizar uma busca mais objetiva.<br>
 Também foi feito o uso de rotas privadas para controlar o acesso no qual apenas usuarios cadastrados possam acessar a pagina de dashboard e cadastro de veiculos, utilizando React Router Dom.<br>
-Os campos de inputs todos possuem validação de acordo com o solicitado em cada input para evitar o cadastro de informações inválidas, feito com React Hook Form e Zod.<br>
-Na construção do sistema foi utilizado React, Firebase, Firebase-auth, Firebase-database, Firebase-storage, Responsive-design, React-router-dom, Tailwind-css, Uuidv4, Swiper-js, Private-routes, 
+Os campos de inputs todos possuem validação de acordo com o solicitado em cada input para evitar o cadastro de informações inválidas, feito com React Hook Form e Zod.<br><br>
+Na construção do sistema foi utilizado React com TypeScript, Firebase, Firebase-auth, Firebase-database, Firebase-storage, Responsive-design, React-router-dom, Tailwind-css, Uuidv4, Swiper-js, Private-routes, 
 React-hook-form, React-hot-toast e zod-validation.
 
 
