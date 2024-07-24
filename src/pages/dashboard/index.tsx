@@ -21,9 +21,10 @@ interface CarProps {
 
 interface ImageCarProps {
     map(arg0: (image: any) => Promise<void>): unknown;
-    name: string;
+    name: string; 
     uid: string;
     url: string;
+    0: any;
 }
 
 
