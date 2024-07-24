@@ -15,16 +15,16 @@ interface CarProps {
     price: string;
     city: string;
     km: string;
-    uid: string;
+    uid: string;    
     images: ImageCarProps;
 }
 
 interface ImageCarProps {
     map(arg0: (image: any) => Promise<void>): unknown;
     name: string; 
-    uid: string;
-    url: string;
-    0: any;
+    uid: string;    
+    0: [] | any;
+    
 }
 
 
